@@ -11,8 +11,6 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
-import os
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -22,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '6&pomz8rkt!@f(c939@75$!ro0f0*8$^b5a5l*bw#5_w@%6id%'
+SECRET_KEY = 'p((n(e#wgv@ivv(cjm*s)vpm23%!vu(0ezwrzz_tzz%7%je2p4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -35,8 +33,6 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
-    'crispy_forms',
-    'main.apps.MainConfig',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -83,7 +79,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-# django.db.backends.sqlite3
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -118,19 +114,7 @@ USE_L10N = True
 USE_TZ = True
 
 
-from django.contrib.messages import constants as messages
-MESSAGE_TAGS = {
-    messages.SUCCESS: 'alert alert-success',
-    messages.INFO: 'alert alert-primary',
-    messages.ERROR: 'alert alert-danger',
-}
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
-
-
-
