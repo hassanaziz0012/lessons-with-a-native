@@ -4,7 +4,8 @@ from django.shortcuts import render
 from django.shortcuts import redirect, render
 from django.contrib import messages
 
-from .forms import AddQuestionForm, StudentProfileForm, UpdateStudentProfileForm, CreateTestForm
+from .forms import (AddQuestionForm, StudentProfileForm, UpdateStudentProfileForm, CreateTestForm, 
+    UpdateTestForm)
 from .models import StudentProfile, Test, Question
 
 
@@ -82,19 +83,27 @@ def tests(request):
     tests = Test.objects.all()
 
     if request.method == 'POST':
-        form = CreateTestForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'This test has been created.')
+        c_form = CreateTestForm(request.POST)
+        u_form = UpdateTestForm(request.POST)
+
+        if c_form.is_valid():
+            c_form.save()
+            messages.success(request, 'This test has been created.', extra_tags='alert alert-primary')
 
             return redirect('tests')
+
+        # if u_form.is_valid():
+        #     u_form.save(commit=False)
+        #     messages.success(request, 'This test has been updated.', extra_tags='alert alert-primary')
     else:
-        form = CreateTestForm()
+        c_form = CreateTestForm()
+        u_form = UpdateTestForm()
 
     context = {
         'title': 'Tests',
         'tests': tests,
-        'form': form,
+        'form': c_form,
+        'u_form': u_form,
     }
     return render(request, 'main/tests.html', context=context)
 
@@ -130,3 +139,24 @@ def test(request, test_id):
         'form': form,
     }
     return render(request, 'main/test.html', context=context)
+
+def delete_test(request, test_id):
+    test = Test.objects.filter(pk=test_id).first()
+    test.delete()
+    messages.success(request, 'This test has been deleted!', extra_tags='alert alert-success')
+
+    return redirect('tests')
+
+def update_test(request, test_id):
+    test = Test.objects.filter(pk=test_id).first()
+
+    if request.method == 'POST':
+        test.test_name = request.POST['test_name']
+        test.save()
+
+        messages.success(request, 'The test was successfully updated.', extra_tags='alert alert-success')
+        return redirect('tests')
+    else:
+        messages.error(request, "It didn't work", extra_tags='alert alert-danger')
+        return redirect('tests')
+

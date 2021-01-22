@@ -28,3 +28,14 @@ class AddQuestionForm(forms.ModelForm):
     class Meta:
         model = Question
         fields = ['question', 'answer']
+
+class UpdateTestForm(forms.ModelForm):
+
+    class Meta:
+        model = Test
+        fields = ['test_name']
+
+
+
+
+
