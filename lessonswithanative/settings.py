@@ -26,7 +26,7 @@ SECRET_KEY = 'p((n(e#wgv@ivv(cjm*s)vpm23%!vu(0ezwrzz_tzz%7%je2p4'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['josiahtrotter.herokuapp.com']
+ALLOWED_HOSTS = ['josiahtrotter.herokuapp.com', 'lessons-with-a-native.herokuapp.com']
 
 
 # Application definition
