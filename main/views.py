@@ -9,6 +9,11 @@ from .forms import (AddQuestionForm, StudentProfileForm, UpdateStudentProfileFor
 from .models import StudentProfile, Test, Question
 
 
+def write_to_file(content):
+    with open('sample_log.txt', 'a') as file:
+        file.write(content)
+
+
 # Create your views here.
 def home(request):
     context = {
@@ -24,13 +29,24 @@ def about(request):
     
 def create_profile(request):
     '''Create a Student Profile.'''
+    tests = Test.objects.all()
     if request.method == 'POST':
         form = StudentProfileForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save(commit=False)
+
             username = form.cleaned_data['username']
-            messages.success(request, f'A new student profile was created for {username}.', extra_tags='alert alert success')
-            return redirect('home')
+            email = form.cleaned_data['email']
+            
+            profile = StudentProfile.objects.create(username=username, email=email)
+            profile.save()
+
+            for test in tests:
+                test.test_status_new.add(profile)
+                test.save()
+
+            messages.success(request, f'A new student profile was created for {username}.', extra_tags='alert alert-success')
+            return redirect('manage-profile')
     else:
         form = StudentProfileForm()
 
@@ -82,13 +98,22 @@ def delete_profile(request, profile_id):
 def tests(request):
     tests = Test.objects.all()
     questions = Question.objects.all()
+    profiles = StudentProfile.objects.all()
 
     if request.method == 'POST':
         c_form = CreateTestForm(request.POST)
         u_form = UpdateTestForm(request.POST)
 
         if c_form.is_valid():
-            c_form.save()
+            c_form.save(commit=False)
+            test = Test(test_name = c_form.cleaned_data['test_name'])
+            test.save()
+
+            for profile in profiles:
+                profile.test_status_new.add(test)
+                profile.save()
+
+
             messages.success(request, 'This test has been created.', extra_tags='alert alert-primary')
 
             return redirect('tests')
@@ -196,3 +221,93 @@ def delete_question(request, test_id, question_id):
 
     messages.success(request, 'That question was deleted!', extra_tags='alert alert-success')
     return redirect('test', test_id)
+
+def take_test(request, test_id, profile_id):
+    test = Test.objects.filter(pk=test_id).first()
+    questions = Question.objects.filter(test=test)
+
+    profile = StudentProfile.objects.filter(pk=profile_id).first()
+
+    context = {
+        'title': str(test.test_name) + ' - Test',
+        'test': test,
+        'questions': questions,
+        'profile': profile,
+    }
+    return render(request, 'main/take_test.html', context=context)
+
+def profile(request, profile_username):
+    profile = StudentProfile.objects.filter(username=profile_username).first()
+
+    tests = Test.objects.all()
+    questions = Question.objects.all()
+
+    context = {
+        'title': profile.username + ' - Profile',
+        'profile': profile,
+        'tests': tests,
+        'questions': questions,
+    }
+    return render(request, 'main/profile.html', context=context)
+
+def test_score_good(request, test_id, profile_id):
+    test = Test.objects.filter(pk=test_id).first()
+    profile = StudentProfile.objects.filter(pk=profile_id).first()
+
+    test.test_status_good.add(profile) # Set the test to status(Good) for this profile.
+
+    # Remove this test's New and Repeat statuses for this profile.
+    test.test_status_new.remove(profile)
+    test.test_status_repeat.remove(profile)
+
+    test.save() # Save changes.
+
+    # Schedule the tests that are currently on repeat.
+    for test in Test.objects.all():
+        if profile in test.test_status_repeat.all():
+            test.test_repeat_due -= 1
+            test.save()
+            if test.test_repeat_due == 0:
+                test.test_status_due = True
+                test.test_repeat_due = 6
+                test.test_status_repeat.remove(profile)
+                test.save()
+
+
+    context = {
+        'title': 'Test rating - ' + test.test_name,
+        'test': test,
+    }
+    return render(request, 'main/test_score_good.html', context=context)
+
+def test_score_needs_work(request, test_id, profile_id):
+    test = Test.objects.filter(pk=test_id).first()
+    profile = StudentProfile.objects.filter(pk=profile_id).first()
+
+    test.test_status_repeat.add(profile) # Set the test to status(Good) for this profile.
+    test.test_repeat_due = 6
+    
+    # Remove this test's New and Repeat statuses for this profile.
+    test.test_status_new.remove(profile)
+    test.test_status_good.remove(profile)
+
+    test.save() # Save changes.
+
+    # Schedule the tests that are currently on repeat.
+    for test in Test.objects.all():
+        if profile in test.test_status_repeat.all():
+            test.test_repeat_due -= 1
+            test.save()
+            if test.test_repeat_due == 0:
+                test.test_status_due = True
+                test.test_repeat_due = 6
+                test.test_status_repeat.remove(profile)
+                test.save()
+
+    context = {
+        'title': 'Test rating - ' + test.test_name,
+        'test': test,
+    }
+    return render(request, 'main/test_score_needs_work.html', context=context)
+
+

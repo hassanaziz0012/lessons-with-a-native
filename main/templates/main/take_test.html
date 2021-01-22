@@ -1,0 +1,41 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<h1>{{ test.test_name }}</h1>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Question</th>
+            <th scope="col">Answer</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for question in questions %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{question.question}}</td>
+                <td>{{question.answer}}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div>
+    <h3>How did the student perform?</h3>
+    <a href="{% url 'test-score-needs-work' test_id=test.id profile_id=profile.id %}">
+        <button class="btn btn-secondary">
+            Needs work
+        </button>
+    </a>
+    
+    <a href="{% url 'test-score-good' test_id=test.id profile_id=profile.id %}">
+        <button class="btn btn-success">
+            Easy
+        </button>
+    </a>
+</div>
+
+{% endblock content %}
