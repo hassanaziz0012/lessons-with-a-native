@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from django.contrib import messages
 
 from .forms import (AddQuestionForm, StudentProfileForm, UpdateStudentProfileForm, CreateTestForm, 
-    UpdateTestForm)
+    UpdateTestForm, UpdateQuestionForm)
 from .models import StudentProfile, Test, Question
 
 
@@ -81,6 +81,7 @@ def delete_profile(request, profile_id):
 
 def tests(request):
     tests = Test.objects.all()
+    questions = Question.objects.all()
 
     if request.method == 'POST':
         c_form = CreateTestForm(request.POST)
@@ -102,6 +103,7 @@ def tests(request):
     context = {
         'title': 'Tests',
         'tests': tests,
+        'questions': questions,
         'form': c_form,
         'u_form': u_form,
     }
@@ -120,6 +122,7 @@ def test(request, test_id):
     
     if request.method == 'POST':
         form = AddQuestionForm(request.POST)
+
         if form.is_valid():
             form.save(commit=False)
             question = Question(
@@ -160,3 +163,36 @@ def update_test(request, test_id):
         messages.error(request, "It didn't work", extra_tags='alert alert-danger')
         return redirect('tests')
 
+def update_question(request, test_id, question_id):
+    question = Question.objects.filter(pk=question_id).first()
+    if request.method == 'POST':
+        form = UpdateQuestionForm(request.POST)
+        if form.is_valid():
+            form.save(commit=False)
+
+            # Update values.
+            # If statements, to check if the user entered a new value. Otherwise, it is set to an empty string and we don't want that. So we avoid it.
+            if request.POST['question']:
+                question.question = form.cleaned_data['question']
+            if request.POST['answer']:
+                question.answer = form.cleaned_data['answer']
+
+            question.save() # Save changes.
+
+            return redirect('test', test_id)
+    else:
+        form = UpdateQuestionForm()
+
+    context = {
+        'title': 'Update Question',
+        'form': form,
+    }
+    return render(request, 'main/update_question.html', context=context)
+
+
+def delete_question(request, test_id, question_id):
+    question = Question.objects.filter(pk=question_id).first()
+    question.delete()
+
+    messages.success(request, 'That question was deleted!', extra_tags='alert alert-success')
+    return redirect('test', test_id)

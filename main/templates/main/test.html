@@ -34,10 +34,22 @@
     <tbody>
         {% for question in questions %}
             <tr>
-                <th scope="row">1</th>
+                <th scope="row">{{forloop.counter}}</th>
                 <td>{{question.question}}</td>
                 <td>{{question.answer}}</td>
-                <td>Update, Delete, Rearrange, etc.</td>
+                <td>
+                    <a href="{% url 'update-question' test_id=test.id question_id=question.id %}">
+                        <button title="Update Question" class="btn btn-primary">
+                            <i class="fas fa-pen-alt"></i>
+                        </button>
+                    </a>
+
+                    <a href="{% url 'delete-question' test_id=test.id question_id=question.id %}">
+                        <button title="Delete Question" class="btn btn-danger">
+                            <i class="fas fa-trash-alt"></i> 
+                        </button>
+                    </a>
+                </td>
             </tr>
         {% endfor %}
     </tbody>

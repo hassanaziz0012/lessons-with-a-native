@@ -1,5 +1,6 @@
 {% extends 'main/base.html' %}
 {% load crispy_forms_tags %}
+{% load tags %}
 
 {% block content %}
 <h1>Tests</h1>
@@ -61,7 +62,7 @@
                         {{test.test_name}}
                     </a>
                 </td>
-                <td>No. of questions</td>
+                <td>{%filter_questions_per_test questions test.id%}</td>
                 <td>
                     
                     <!-- Update Button trigger modal -->
@@ -98,7 +99,7 @@
                                     <a href="{% url 'update-test' test.id %}">
                                         <button type="submit" class="btn btn-primary">Save changes</button>
                                     </a>
-                                    
+
                                     </form>
                                 </div>
 
