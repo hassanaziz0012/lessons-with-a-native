@@ -1,0 +1,2 @@
+export SECRET_KEY="c5fccf2d249e89f9e6e868c2b548d9b89cfdc293ba163489"
+export DEBUG_VALUE="True"
