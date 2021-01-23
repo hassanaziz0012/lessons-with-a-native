@@ -14,7 +14,7 @@ class Test(models.Model):
     test_status_repeat = models.ManyToManyField('StudentProfile', related_name='test_status_repeat')
     test_repeat_due = models.IntegerField(default=6)
 
-    test_status_due = models.BooleanField(default=False)
+    test_status_due = models.ManyToManyField('StudentProfile', related_name='test_status_due')
 
     def __str__(self) -> str:
         return f"{self.test_name}"

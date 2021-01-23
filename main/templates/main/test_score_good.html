@@ -2,5 +2,63 @@
 
 {% block content %}
 <h1>Test Score Good</h1>
+<hr>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">Next Tests</th>
+            <th scope="col">Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for test in tests %}
+            <tr>
+
+                <td>
+                    {% if profile in test.test_status_due.all %}
+                        {{test.test_name}}
+                        <a href="{% url 'take-test' test_id=test.id profile_id=profile.id %}">
+                            <button class="btn btn-primary">Take Test</button>
+                        </a>
+                    {% elif profile in test.test_status_new.all %}
+                        {{test.test_name}}
+                        <a href="{% url 'take-test' test_id=test.id profile_id=profile.id %}">
+                            <button class="btn btn-primary">Take Test</button>
+                        </a>
+                    {% else %}
+                        <span>No tests currently Due or New. Please return back to profile.</span>
+                    {% endif %}
+                </td>
+
+                <td>
+                    {% if profile in test.test_status_due.all %}
+                        <span class="badge badge-success">Due</span>
+                    {% endif %}
+
+                    {% if profile in test.test_status_new.all %}
+                        <span class="badge badge-success">New</span>
+                    {% endif %}
+                </td>
+                
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    $("td").each(function() {
+    if (this.innerText === '') {
+    	this.closest('tr').remove();
+    }
+});
+</script>
+
+
+<a href="{% url 'profile' profile.username %}">
+    <button class="btn btn-primary">Back to Profile</button>
+</a>
 
 {% endblock content %}

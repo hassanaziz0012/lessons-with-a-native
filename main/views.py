@@ -253,6 +253,10 @@ def profile(request, profile_username):
     }
     return render(request, 'main/profile.html', context=context)
 
+# TODO: When you take a test, you should be taken to the next Due or New test. Since we had difficulties 
+# implementing that, we can do something like this: We provide a button group, with each button linking to 
+# a test that is either Due or New. The user can select the next test to take. There will also be a final 
+# button that takes you to the Student's Profile page. This shouldn't be too hard to implement.
 def test_score_good(request, test_id, profile_id):
     test = Test.objects.filter(pk=test_id).first()
     profile = StudentProfile.objects.filter(pk=profile_id).first()
@@ -262,6 +266,7 @@ def test_score_good(request, test_id, profile_id):
     # Remove this test's New and Repeat statuses for this profile.
     test.test_status_new.remove(profile)
     test.test_status_repeat.remove(profile)
+    test.test_status_due.remove(profile)
 
     test.save() # Save changes.
 
@@ -269,26 +274,20 @@ def test_score_good(request, test_id, profile_id):
     for test_obj in Test.objects.all():
         if profile in test_obj.test_status_repeat.all():
             test_obj.test_repeat_due -= 1
-            test_obj.test_status_due = False
+            test_obj.test_status_due.remove(profile)
 
             test_obj.save()
 
         if test_obj.test_repeat_due == 0:
-            test_obj.test_status_due = True
+            test_obj.test_status_due.add(profile)
             test_obj.test_repeat_due = 6
             test_obj.test_status_repeat.remove(profile)
 
             test_obj.save()
 
-        # Check if another test is currently Due/New, if so, then load that test next. Otherwise, return to the profile page.
-        if test_obj.test_status_due == True:
-            test_obj.test_status_due = False
-            test.save()
-            return redirect('take-test', test_obj.id, profile.id)
-        elif profile in test_obj.test_status_new.all():
-            return redirect('take-test', test_obj.id, profile.id)
-        else:
-            return redirect('profile', profile.username)
+    # Check if another test is currently Due/New, if so, then load that test next. Otherwise, return to the profile page.
+    context = {'title': f'{test.test_name} - Graded Good', 'profile': profile, 'tests': Test.objects.all()}
+    return render(request, 'main/test_score_good.html', context=context)
 
 def test_score_needs_work(request, test_id, profile_id):
     test = Test.objects.filter(pk=test_id).first()
@@ -296,7 +295,6 @@ def test_score_needs_work(request, test_id, profile_id):
 
     test.test_status_repeat.add(profile) # Set the test to status(Good) for this profile.
     test.test_repeat_due = 6
-    test.test_status_due = False
     
     # Remove this test's New and Repeat statuses for this profile.
     test.test_status_new.remove(profile)
@@ -308,23 +306,20 @@ def test_score_needs_work(request, test_id, profile_id):
     for test_obj in Test.objects.all():
         if profile in test_obj.test_status_repeat.all():
             test_obj.test_repeat_due -= 1
-            test_obj.test_status_due = False
+            test_obj.test_status_due.remove(profile)
 
             test_obj.save()
 
         if test_obj.test_repeat_due == 0:
-            test_obj.test_status_due = True
+            test_obj.test_status_due.add(profile)
             test_obj.test_repeat_due = 6
             test_obj.test_status_repeat.remove(profile)
             
             test_obj.save()
 
-        # Check if another test is currently Due/New, if so, then load that test next. Otherwise, return to the profile page.
-        if test_obj.test_status_due == True:
-            test_obj.test_status_due = False
-            test.save()
-            return redirect('take-test', test.id, profile.id)
-        elif profile in test.test_status_new.all():
-            return redirect('take-test', test.id, profile.id)
-        else:
-            return redirect('profile', profile.username)
+    # Check if another test is currently Due/New, if so, then load that test next. Otherwise, return to the profile page.
+    context = {'title': f'{test.test_name} - Graded Needs Work', 'profile': profile, 'tests': Test.objects.all()}
+    return render(request, 'main/test_score_needs_work.html', context=context)
+
+
+
