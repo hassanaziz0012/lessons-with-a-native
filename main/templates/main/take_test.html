@@ -1,7 +1,11 @@
 {% extends 'main/base.html' %}
 
 {% block content %}
-<h1>{{ test.test_name }}</h1>
+<h1>Test: {{ test.test_name }}</h1>
+<h3>Directions for the teacher:</h3>
+<p class="test-directions text-muted">
+    {{ test.test_directions }}
+</p>
 
 <table class="table table-bordered table-striped">
     <thead class="thead-dark">

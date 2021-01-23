@@ -18,7 +18,7 @@
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Create new test</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-        <span aria-hidden="true">&times;</span>
+            <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <form action="" method="post">
@@ -26,7 +26,7 @@
         <div class="modal-body">
             <p class="text-muted">You will be able to add questions later.</p>
                 {%csrf_token%}
-                {{form}}
+                {{form|crispy}}
         </div>
 
         <div class="modal-footer">

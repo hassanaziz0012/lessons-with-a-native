@@ -6,6 +6,7 @@ from django.db import models
 # Create your models here.
 class Test(models.Model):
     test_name = models.CharField(max_length=100)
+    test_directions = models.TextField(null=True)
 
     test_status_new = models.ManyToManyField('StudentProfile', related_name='test_status_new')
     test_status_good = models.ManyToManyField('StudentProfile', related_name='test_status_good')
@@ -14,6 +15,13 @@ class Test(models.Model):
     test_repeat_due = models.IntegerField(default=6)
 
     test_status_due = models.BooleanField(default=False)
+
+    def __str__(self) -> str:
+        return f"{self.test_name}"
+
+    def __repr__(self) -> str:
+        return f"<{self.test_name}>"
+
 
 class StudentProfile(models.Model):
     username = models.CharField(max_length=100, blank=False)

@@ -21,7 +21,7 @@ class CreateTestForm(forms.ModelForm):
 
     class Meta:
         model = Test
-        fields = ['test_name']
+        fields = ['test_name', 'test_directions']
 
 class AddQuestionForm(forms.ModelForm):
 
@@ -31,9 +31,11 @@ class AddQuestionForm(forms.ModelForm):
 
 class UpdateTestForm(forms.ModelForm):
 
+    test_name = forms.CharField(max_length=100, required=False)
+
     class Meta:
         model = Test
-        fields = ['test_name']
+        fields = ['test_name', 'test_directions']
 
 class UpdateQuestionForm(forms.ModelForm):
 
