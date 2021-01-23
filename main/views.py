@@ -183,9 +183,7 @@ def update_test(request, test_id):
             test.test_name = request.POST['test_name']
         if request.POST['test_directions']:
             test.test_directions = request.POST['test_directions']
-            messages.success(request, f'Changed Test Directions! {test.test_directions}', extra_tags='alert alert-primary')
         test.save()
-        messages.success(request, f'{test.test_directions}', extra_tags='alert alert-danger')
 
         messages.success(request, 'The test was successfully updated.', extra_tags='alert alert-success')
         return redirect('tests')
@@ -291,9 +289,6 @@ def test_score_good(request, test_id, profile_id):
             return redirect('take-test', test_obj.id, profile.id)
         else:
             return redirect('profile', profile.username)
-
-        
-   
 
 def test_score_needs_work(request, test_id, profile_id):
     test = Test.objects.filter(pk=test_id).first()
