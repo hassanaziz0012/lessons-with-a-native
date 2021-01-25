@@ -54,3 +54,20 @@ class Question(models.Model):
 
     def __repr__(self) -> str:
         return f'<{self.question} - {self.test}>'
+
+class EmailPreset(models.Model):
+    recipient = models.EmailField()
+    subject = models.CharField(max_length=120)
+    body = models.TextField()
+
+    def __str__(self) -> str:
+        return f'{self.recipient} - Subject: {self.subject}'
+    
+    def __repr__(self) -> str:
+        return f'<{self.recipient}><Subject: {self.subject}>'
+
+
+
+
+
+

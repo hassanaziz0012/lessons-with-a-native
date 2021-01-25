@@ -1,5 +1,5 @@
 from django import forms
-from .models import Question, StudentProfile, Test
+from .models import EmailPreset, Question, StudentProfile, Test
 
 
 class StudentProfileForm(forms.ModelForm):
@@ -46,13 +46,11 @@ class UpdateQuestionForm(forms.ModelForm):
         model = Question
         fields = ['question', 'answer']
 
-class EmailStudentForm(forms.Form):
-
+class EmailStudentForm(forms.ModelForm):
     recipient = forms.EmailField(label='Recipient\'s Email Address')
-    subject = forms.CharField(max_length=120)
-    body = forms.CharField(widget=forms.Textarea)
 
     class Meta:
+        model = EmailPreset
         fields = ['recipient', 'subject', 'body']
 
 

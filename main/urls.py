@@ -27,6 +27,7 @@ urlpatterns = [
     path('tests/<int:test_id>/move/up', views.test_move_up, name='test-move-up'),
     path('tests/<int:test_id>/move/down', views.test_move_down, name='test-move-down'),
 
-    path('tests/<int:test_id>/send-mail', views.send_student_email, name='send-student-email'),
+    path('tests/<int:test_id>/save-email-preset', views.save_email_preset, name='save-email-preset'),
+    path('tests/<int:test_id>/<int:preset_id>/send-mail', views.send_student_email, name='send-student-email'),
 
 ]

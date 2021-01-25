@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 
 from .forms import (AddQuestionForm, StudentProfileForm, UpdateStudentProfileForm, CreateTestForm,
     UpdateTestForm, UpdateQuestionForm, EmailStudentForm)
-from .models import StudentProfile, Test, Question
+from .models import EmailPreset, StudentProfile, Test, Question
 
 from email.message import EmailMessage
 import smtplib
@@ -105,8 +105,6 @@ def delete_profile(request, profile_id):
 
 
 def tests(request):
-    tests = Test.objects.all()
-
     tests = Test.objects.all().order_by('test_order')
 
     questions = Question.objects.all()
@@ -129,9 +127,7 @@ def tests(request):
                 profile.test_status_new.add(test)
                 profile.save()
 
-
             messages.success(request, 'This test has been created.', extra_tags='alert alert-primary')
-
             return redirect('tests')
 
     else:
@@ -183,6 +179,7 @@ def test(request, test_id):
         'questions': questions,
         'form': form,
         'e_form': e_form,
+        'presets': EmailPreset.objects.all(),
     }
     return render(request, 'main/test.html', context=context)
 
@@ -367,21 +364,26 @@ def test_move_down(request, test_id):
 
     return redirect('tests')
 
-def send_student_email(request, test_id):
+def save_email_preset(request, test_id):
     test = Test.objects.filter(pk=test_id).first()
-
-    message = EmailMessage()
-    message['From'] = 'lessonswithanative@gmail.com'
-    message['To'] = request.POST.get('recipient')
-    message['Subject'] = request.POST.get('subject')
-    message.set_content(
-        f'''{request.POST.get('body')}
         
-Test: {test.test_name}
+    recipient = request.POST.get('recipient')
+    subject = request.POST.get('subject')
+    body = request.POST.get('body')
 
-Best Regards
-Lessons with a Native'''
-    )
+    preset = EmailPreset(recipient=recipient, subject=subject, body=body)
+    preset.save()
+
+    return redirect('test', test_id)
+
+def send_student_email(request, test_id, preset_id):
+    preset = EmailPreset.objects.filter(pk=preset_id).first()
+    message = EmailMessage()
+
+    message['From'] = 'lessonswithanative@gmail.com'
+    message['To'] = preset.recipient
+    message['Subject'] = preset.subject
+    message.set_content(preset.body)
 
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login('lessonswithanative@gmail.com', 'Noki@7250i')
