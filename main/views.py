@@ -345,8 +345,16 @@ def test_score_needs_work(request, test_id, profile_id):
 
             test_obj.save()
 
-    # Check if another test is currently Due/New, if so, then load that test next. Otherwise, return to the profile page.
-    context = {'title': f'{test.test_name} - Graded Needs Work', 'profile': profile, 'tests': Test.objects.all()}
+    prev_test = Test.objects.filter(test_order=test.test_order-1).first()
+    next_test = Test.objects.filter(test_order=test.test_order+1).first()
+
+    context = {
+        'title': f'{test.test_name} - Graded Needs Work', 
+        'profile': profile, 
+        'tests': Test.objects.all(),
+        'prev_test': prev_test,
+        'next_test': next_test,
+        }
     return render(request, 'main/test_score_needs_work.html', context=context)
 
 
