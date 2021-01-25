@@ -404,7 +404,6 @@ def add_to_review(request, test_id, question_id, profile_id):
     question.review_question = True
     question.save()
 
-    messages.success(request, question.review_question, extra_tags='alert alert-success')
     return redirect('take-test', test_id, profile_id)
 
 def remove_from_review(request, test_id, question_id, profile_id):
@@ -412,7 +411,6 @@ def remove_from_review(request, test_id, question_id, profile_id):
     question.review_question = False
     question.save()
 
-    messages.success(request, question.review_question, extra_tags='alert alert-danger')
     return redirect('take-test', test_id, profile_id)
 
 
