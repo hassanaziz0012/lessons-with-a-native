@@ -244,6 +244,13 @@ def take_test(request, test_id, profile_id):
     test = Test.objects.filter(pk=test_id).first()
     questions = Question.objects.filter(test=test)
 
+    for question in Question.objects.all():
+        if question.review_question == True:
+            review_questions_bool = True
+            break
+        else:
+            review_questions_bool = False
+
     profile = StudentProfile.objects.filter(pk=profile_id).first()
 
     context = {
@@ -251,6 +258,7 @@ def take_test(request, test_id, profile_id):
         'test': test,
         'questions': questions,
         'profile': profile,
+        'review_questions_bool': review_questions_bool,
     }
     return render(request, 'main/take_test.html', context=context)
 
@@ -391,8 +399,21 @@ def send_student_email(request, test_id, preset_id):
 
     return redirect('test', test_id)
 
-def add_to_review(request, question_id):
-    pass
+def add_to_review(request, test_id, question_id, profile_id):
+    question = Question.objects.filter(pk=question_id).first()
+    question.review_question = True
+    question.save()
+
+    messages.success(request, question.review_question, extra_tags='alert alert-success')
+    return redirect('take-test', test_id, profile_id)
+
+def remove_from_review(request, test_id, question_id, profile_id):
+    question = Question.objects.filter(pk=question_id).first()
+    question.review_question = False
+    question.save()
+
+    messages.success(request, question.review_question, extra_tags='alert alert-danger')
+    return redirect('take-test', test_id, profile_id)
 
 
 

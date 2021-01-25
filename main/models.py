@@ -19,16 +19,12 @@ class Test(models.Model):
     test_order = models.IntegerField(default=0)
 
     supporting_material = models.CharField(max_length=500, null=True)
-    review_questions = models.ForeignKey('Question', related_name='review_questions', on_delete=models.CASCADE, null=True)
 
     def __str__(self) -> str:
         return f"{self.test_name}"
 
     def __repr__(self) -> str:
         return f"<{self.test_name}>"
-
-class TestOrder(models.Model):
-    test_bool = models.BooleanField()
 
 class StudentProfile(models.Model):
     username = models.CharField(max_length=100, blank=False)
@@ -49,6 +45,8 @@ class Question(models.Model):
     question = models.CharField(max_length=200)
     answer = models.CharField(max_length=200)
 
+    review_question = models.BooleanField(default=False)
+
     def __str__(self) -> str:
         return f'{self.question} - Test: {self.test}'
 
@@ -65,9 +63,5 @@ class EmailPreset(models.Model):
     
     def __repr__(self) -> str:
         return f'<{self.recipient}><Subject: {self.subject}>'
-
-
-
-
 
 
