@@ -60,7 +60,7 @@
                 <th scope="row">{{forloop.counter}}</th>
                 <td>
                     <a href="{% url 'test' test.id %}">
-                        {{test.test_name}} ({{ test.test_order }})
+                        {{test.test_name}}
                     </a>
                 </td>
                 <td>{%filter_questions_per_test questions test.id%}</td>

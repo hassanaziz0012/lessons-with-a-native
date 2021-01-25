@@ -290,6 +290,9 @@ def test_score_good(request, test_id, profile_id):
 
     test.save() # Save changes.
 
+    prev_test = Test.objects.filter(test_order=test.test_order-1).first()
+    next_test = Test.objects.filter(test_order=test.test_order+1).first()
+
     # Schedule the tests that are currently on repeat.
     for test_obj in Test.objects.all():
         if profile in test_obj.test_status_repeat.all():
@@ -305,8 +308,13 @@ def test_score_good(request, test_id, profile_id):
 
             test_obj.save()
 
-    # Check if another test is currently Due/New, if so, then load that test next. Otherwise, return to the profile page.
-    context = {'title': f'{test.test_name} - Graded Good', 'profile': profile, 'tests': Test.objects.all()}
+    context = {
+        'title': f'{test.test_name} - Graded Good', 
+        'profile': profile, 
+        'tests': Test.objects.all(),
+        'prev_test': prev_test,
+        'next_test': next_test,
+        }
     return render(request, 'main/test_score_good.html', context=context)
 
 def test_score_needs_work(request, test_id, profile_id):
@@ -412,6 +420,7 @@ def remove_from_review(request, test_id, question_id, profile_id):
     question.save()
 
     return redirect('take-test', test_id, profile_id)
+
 
 
 

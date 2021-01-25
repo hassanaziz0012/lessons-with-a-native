@@ -32,4 +32,5 @@ urlpatterns = [
 
     path('tests/take/<int:test_id>/profile/<int:profile_id>/questions/<int:question_id>/add-to-review', views.add_to_review, name='add-to-review'),
     path('tests/take/<int:test_id>/profile/<int:profile_id>/questions/<int:question_id>/remove-from-review', views.remove_from_review, name='remove-from-review'),
+
 ]
