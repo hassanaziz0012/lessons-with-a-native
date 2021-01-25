@@ -16,12 +16,16 @@ class Test(models.Model):
 
     test_status_due = models.ManyToManyField('StudentProfile', related_name='test_status_due')
 
+    test_order = models.IntegerField(default=0)
+
     def __str__(self) -> str:
         return f"{self.test_name}"
 
     def __repr__(self) -> str:
         return f"<{self.test_name}>"
 
+class TestOrder(models.Model):
+    test_bool = models.BooleanField()
 
 class StudentProfile(models.Model):
     username = models.CharField(max_length=100, blank=False)

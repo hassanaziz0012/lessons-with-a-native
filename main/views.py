@@ -10,6 +10,12 @@ from .models import StudentProfile, Test, Question
 
 
 def write_to_file(content):
+    '''Used mostly for debugging purposes.
+    
+    We write some data to a text file to see what that data contains. Using print() statements could work
+    as well, but is not very neat, especially when you consider how cluttered the Terminal gets when the 
+    Django server is running.
+    '''
     with open('sample_log.txt', 'a') as file:
         file.write(content)
 
@@ -97,6 +103,9 @@ def delete_profile(request, profile_id):
 
 def tests(request):
     tests = Test.objects.all()
+
+    tests = Test.objects.all().order_by('test_order')
+
     questions = Question.objects.all()
     profiles = StudentProfile.objects.all()
 
@@ -106,7 +115,11 @@ def tests(request):
 
         if c_form.is_valid():
             c_form.save(commit=False)
-            test = Test(test_name = c_form.cleaned_data['test_name'], test_directions = c_form.cleaned_data['test_directions'])
+            test = Test(
+                test_name = c_form.cleaned_data['test_name'], 
+                test_directions = c_form.cleaned_data['test_directions'],
+                test_order = len(Test.objects.all()),
+                )
             test.save()
 
             for profile in profiles:
@@ -118,9 +131,6 @@ def tests(request):
 
             return redirect('tests')
 
-        # if u_form.is_valid():
-        #     u_form.save(commit=False)
-        #     messages.success(request, 'This test has been updated.', extra_tags='alert alert-primary')
     else:
         c_form = CreateTestForm()
         u_form = UpdateTestForm()
@@ -131,6 +141,7 @@ def tests(request):
         'questions': questions,
         'form': c_form,
         'u_form': u_form,
+        'last_test': len(Test.objects.all()) - 1
     }
     return render(request, 'main/tests.html', context=context)
 
@@ -144,7 +155,7 @@ def create_test(request):
 def test(request, test_id):
     test = Test.objects.filter(pk=test_id).first()
     questions = Question.objects.filter(test=test)
-    
+
     if request.method == 'POST':
         form = AddQuestionForm(request.POST)
 
@@ -253,10 +264,7 @@ def profile(request, profile_username):
     }
     return render(request, 'main/profile.html', context=context)
 
-# TODO: When you take a test, you should be taken to the next Due or New test. Since we had difficulties 
-# implementing that, we can do something like this: We provide a button group, with each button linking to 
-# a test that is either Due or New. The user can select the next test to take. There will also be a final 
-# button that takes you to the Student's Profile page. This shouldn't be too hard to implement.
+
 def test_score_good(request, test_id, profile_id):
     test = Test.objects.filter(pk=test_id).first()
     profile = StudentProfile.objects.filter(pk=profile_id).first()
@@ -322,4 +330,33 @@ def test_score_needs_work(request, test_id, profile_id):
     return render(request, 'main/test_score_needs_work.html', context=context)
 
 
+def test_move_up(request, test_id):
+    test = Test.objects.filter(pk=test_id).first()
 
+    # prev_test: The test in the previous row of the table, right below the selected test in the table.
+    prev_test = Test.objects.filter(test_order=test.test_order-1).first()
+    selected_test_order  = test.test_order
+
+    test.test_order = prev_test.test_order
+    prev_test.test_order = selected_test_order
+
+    test.save()
+    prev_test.save()
+
+    return redirect('tests')
+    
+
+def test_move_down(request, test_id):
+    test = Test.objects.filter(pk=test_id).first()
+
+    # next_test: The test in the next row of the table, right below the selected test in the table.
+    next_test = Test.objects.filter(test_order=test.test_order+1).first()
+    selected_test_order  = test.test_order
+
+    test.test_order = next_test.test_order
+    next_test.test_order = selected_test_order
+
+    test.save()
+    next_test.save()
+
+    return redirect('tests')

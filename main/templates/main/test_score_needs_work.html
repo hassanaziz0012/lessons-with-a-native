@@ -33,7 +33,7 @@
 
                 <td>
                     {% if profile in test.test_status_due.all %}
-                        <span class="badge badge-success">Due</span>
+                        <span class="badge badge-warning">Due</span>
                     {% endif %}
 
                     {% if profile in test.test_status_new.all %}

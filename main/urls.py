@@ -24,4 +24,7 @@ urlpatterns = [
     path('tests/take/<int:test_id>/profile/<int:profile_id>/results/good', views.test_score_good, name='test-score-good'),
     path('tests/take/<int:test_id>/profile/<int:profile_id>/results/needs-work', views.test_score_needs_work, name='test-score-needs-work'),
 
+    path('tests/<int:test_id>/move/up', views.test_move_up, name='test-move-up'),
+    path('tests/<int:test_id>/move/down', views.test_move_down, name='test-move-down'),
+
 ]

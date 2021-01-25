@@ -43,13 +43,14 @@
 </div>
 </div>
 
-<table class="table table-striped table-bordered">
+<table id="testsTable" class="table table-striped table-bordered">
     <thead class="thead-dark">
         <tr>
             <th scope="col">#</th>
             <th scope="col">Name</th>
             <th scope="col">Questions</th>
             <th scope="col">Configure</th>
+            <th scope="col">Order</th>
         </tr>
     </thead>
 
@@ -59,7 +60,7 @@
                 <th scope="row">{{forloop.counter}}</th>
                 <td>
                     <a href="{% url 'test' test.id %}">
-                        {{test.test_name}}
+                        {{test.test_name}} ({{ test.test_order }})
                     </a>
                 </td>
                 <td>{%filter_questions_per_test questions test.id%}</td>
@@ -141,14 +142,21 @@
                         </div>
                     </div>
                 </td>
+                <td>
+                    {% if test.test_order != 0 %}
+                        <a href="{% url 'test-move-up' test.id %}">
+                            <button title="Move Up" class="btn btn-success move up"><i class="fas fa-sort-amount-up-alt"></i></button>
+                        </a>
+                    {% endif %}
+                    {% if test.test_order != last_test %}
+                        <a href="{% url 'test-move-down' test.id %}">
+                            <button title="Move Down" class="btn btn-info move down"><i class="fas fa-sort-amount-down-alt"></i></button>
+                        </a>
+                    {% endif %}
+                </td>
             </tr>
         {% endfor %}
     </tbody>
 </table>
-
-
-  
-
-
 
 {% endblock content %}
