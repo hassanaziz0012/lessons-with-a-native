@@ -3,17 +3,20 @@ from django.shortcuts import render
 # Create your views here.
 from django.shortcuts import redirect, render
 from django.contrib import messages
+from django.urls import reverse_lazy
 
-from .forms import (AddQuestionForm, StudentProfileForm, UpdateStudentProfileForm, CreateTestForm, 
-    UpdateTestForm, UpdateQuestionForm)
+from .forms import (AddQuestionForm, StudentProfileForm, UpdateStudentProfileForm, CreateTestForm,
+    UpdateTestForm, UpdateQuestionForm, EmailStudentForm)
 from .models import StudentProfile, Test, Question
 
+from email.message import EmailMessage
+import smtplib
 
 def write_to_file(content):
     '''Used mostly for debugging purposes.
-    
+
     We write some data to a text file to see what that data contains. Using print() statements could work
-    as well, but is not very neat, especially when you consider how cluttered the Terminal gets when the 
+    as well, but is not very neat, especially when you consider how cluttered the Terminal gets when the
     Django server is running.
     '''
     with open('sample_log.txt', 'a') as file:
@@ -32,7 +35,7 @@ def about(request):
         'title': 'About'
     }
     return render(request, 'main/about.html', context=context)
-    
+
 def create_profile(request):
     '''Create a Student Profile.'''
     tests = Test.objects.all()
@@ -43,7 +46,7 @@ def create_profile(request):
 
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
-            
+
             profile = StudentProfile.objects.create(username=username, email=email)
             profile.save()
 
@@ -69,17 +72,17 @@ def manage_profile(request):
         'profiles': StudentProfile.objects.all(),
     }
     return render(request, 'main/manage_profile.html', context=context)
-    
+
 def update_profile(request, profile_id):
     profile = StudentProfile.objects.filter(pk=profile_id).first()
-    
+
     if request.method == 'POST':
         form = UpdateStudentProfileForm(request.POST, initial={'username': profile.username, 'email': profile.email})
         if form.is_valid():
             profile.username = form.cleaned_data['username']
             profile.email = form.cleaned_data['email']
             profile.save()
-            
+
             messages.success(request, 'This profile has been updated!')
             return redirect('manage-profile')
     else:
@@ -116,7 +119,7 @@ def tests(request):
         if c_form.is_valid():
             c_form.save(commit=False)
             test = Test(
-                test_name = c_form.cleaned_data['test_name'], 
+                test_name = c_form.cleaned_data['test_name'],
                 test_directions = c_form.cleaned_data['test_directions'],
                 test_order = len(Test.objects.all()),
                 )
@@ -141,7 +144,7 @@ def tests(request):
         'questions': questions,
         'form': c_form,
         'u_form': u_form,
-        'last_test': len(Test.objects.all()) - 1
+        'last_test': len(Test.objects.all()) - 1,
     }
     return render(request, 'main/tests.html', context=context)
 
@@ -158,6 +161,7 @@ def test(request, test_id):
 
     if request.method == 'POST':
         form = AddQuestionForm(request.POST)
+        e_form = EmailStudentForm(request.POST)
 
         if form.is_valid():
             form.save(commit=False)
@@ -170,12 +174,15 @@ def test(request, test_id):
 
     else:
         form = AddQuestionForm()
+        e_form = EmailStudentForm()
+
 
     context = {
         'title': test.test_name,
         'test': test,
         'questions': questions,
         'form': form,
+        'e_form': e_form,
     }
     return render(request, 'main/test.html', context=context)
 
@@ -303,7 +310,7 @@ def test_score_needs_work(request, test_id, profile_id):
 
     test.test_status_repeat.add(profile) # Set the test to status(Good) for this profile.
     test.test_repeat_due = 6
-    
+
     # Remove this test's New and Repeat statuses for this profile.
     test.test_status_new.remove(profile)
     test.test_status_good.remove(profile)
@@ -322,7 +329,7 @@ def test_score_needs_work(request, test_id, profile_id):
             test_obj.test_status_due.add(profile)
             test_obj.test_repeat_due = 6
             test_obj.test_status_repeat.remove(profile)
-            
+
             test_obj.save()
 
     # Check if another test is currently Due/New, if so, then load that test next. Otherwise, return to the profile page.
@@ -344,7 +351,6 @@ def test_move_up(request, test_id):
     prev_test.save()
 
     return redirect('tests')
-    
 
 def test_move_down(request, test_id):
     test = Test.objects.filter(pk=test_id).first()
@@ -360,3 +366,31 @@ def test_move_down(request, test_id):
     next_test.save()
 
     return redirect('tests')
+
+def send_student_email(request, test_id):
+    test = Test.objects.filter(pk=test_id).first()
+
+    message = EmailMessage()
+    message['From'] = 'lessonswithanative@gmail.com'
+    message['To'] = request.POST.get('recipient')
+    message['Subject'] = request.POST.get('subject')
+    message.set_content(
+        f'''{request.POST.get('body')}
+        
+Test: {test.test_name}
+
+Best Regards
+Lessons with a Native'''
+    )
+
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.login('lessonswithanative@gmail.com', 'Noki@7250i')
+        smtp.send_message(message)
+
+    return redirect('test', test_id)
+
+def add_to_review(request, question_id):
+    pass
+
+
+

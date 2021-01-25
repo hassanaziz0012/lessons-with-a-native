@@ -18,6 +18,9 @@ class Test(models.Model):
 
     test_order = models.IntegerField(default=0)
 
+    supporting_material = models.CharField(max_length=500, null=True)
+    review_questions = models.ForeignKey('Question', related_name='review_questions', on_delete=models.CASCADE, null=True)
+
     def __str__(self) -> str:
         return f"{self.test_name}"
 

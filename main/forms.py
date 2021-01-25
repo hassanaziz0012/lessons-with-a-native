@@ -46,6 +46,14 @@ class UpdateQuestionForm(forms.ModelForm):
         model = Question
         fields = ['question', 'answer']
 
+class EmailStudentForm(forms.Form):
+
+    recipient = forms.EmailField(label='Recipient\'s Email Address')
+    subject = forms.CharField(max_length=120)
+    body = forms.CharField(widget=forms.Textarea)
+
+    class Meta:
+        fields = ['recipient', 'subject', 'body']
 
 
 
