@@ -33,4 +33,11 @@ urlpatterns = [
     path('tests/take/<int:test_id>/profile/<int:profile_id>/questions/<int:question_id>/add-to-review', views.add_to_review, name='add-to-review'),
     path('tests/take/<int:test_id>/profile/<int:profile_id>/questions/<int:question_id>/remove-from-review', views.remove_from_review, name='remove-from-review'),
 
+    path('import/tests', views.import_all_tests, name='import-all-tests'),
+    path('export/tests', views.export_all_tests, name='export-all-tests'),
+
+    path('import/questions', views.import_all_questions, name='import-all-questions'),
+    path('export/questions', views.export_all_questions, name='export-all-questions'),
+
+
 ]

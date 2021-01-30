@@ -1,6 +1,98 @@
 {% extends 'main/base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <h1>Home</h1>
+<hr>
+
+<h2>Backups</h2>
+<div class="export-tests">
+    <a href="{% url 'export-all-tests' %}">
+        <button class="btn btn-primary">Export all tests</button>
+    </a>
+
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ImportTestsModal">
+        Import all tests
+    </button>
+</div>
+
+<br>
+
+<div class="export-questions">
+    <a href="{% url 'export-all-questions' %}">
+        <button class="btn btn-primary">Export all questions</button>
+    </a>
+
+    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ImportQuestionsModal">
+        Import all questions
+    </button>
+</div>
+
+<!-- Import Tests Modal -->
+<div class="modal fade" id="ImportTestsModal" tabindex="-1" role="dialog" aria-labelledby="ImportTestsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="ImportTestsModalLabel">Upload Tests</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                Please upload your tests to import it in the database.
+                <hr>
+
+                
+                <form action="{% url 'import-all-tests' %}" enctype="multipart/form-data" method="post">
+                    {%csrf_token%}
+                    {{tests_form|crispy}}
+            
+            </div>
+
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Import tests</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Import Questions Modal -->
+<div class="modal fade" id="ImportQuestionsModal" tabindex="-1" role="dialog" aria-labelledby="ImportQuestionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="ImportQuestionsModalLabel">Upload Questions</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                Please upload your questions to import it in the database.
+                <hr>
+
+                
+                <form action="{% url 'import-all-questions' %}" enctype="multipart/form-data" method="post">
+                    {%csrf_token%}
+                    {{questions_form|crispy}}
+            
+            </div>
+
+            <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Import questions</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 {% endblock content %}

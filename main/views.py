@@ -4,13 +4,16 @@ from django.shortcuts import render
 from django.shortcuts import redirect, render
 from django.contrib import messages
 from django.urls import reverse_lazy
+from django.http import HttpResponse
 
 from .forms import (AddQuestionForm, StudentProfileForm, UpdateStudentProfileForm, CreateTestForm,
-    UpdateTestForm, UpdateQuestionForm, EmailStudentForm)
+    UpdateTestForm, UpdateQuestionForm, EmailStudentForm, ImportDataForm)
 from .models import EmailPreset, StudentProfile, Test, Question
 
 from email.message import EmailMessage
 import smtplib
+import csv
+import pandas
 
 def write_to_file(content):
     '''Used mostly for debugging purposes.
@@ -25,8 +28,24 @@ def write_to_file(content):
 
 # Create your views here.
 def home(request):
+    if request.method == 'POST':
+        tests_form = ImportDataForm(request.POST, request.FILES)
+        questions_form = ImportDataForm(request.POST, request.FILES)
+
+        if tests_form.is_valid():
+            tests_form.save(commit=False)
+        
+        if questions_form.is_valid():
+            questions_form.save(commit=False)
+
+    else:
+        tests_form = ImportDataForm()
+        questions_form = ImportDataForm()
+
     context = {
         'title': 'Home',
+        'tests_form': tests_form,
+        'questions_form': questions_form
     }
     return render(request, 'main/home.html', context=context)
 
@@ -429,6 +448,88 @@ def remove_from_review(request, test_id, question_id, profile_id):
 
     return redirect('take-test', test_id, profile_id)
 
+def import_all_tests(request):
+    csv_file = request.FILES['csv_file'] # The uploaded file.
+
+    # Create a new 'export.csv' file based on the data in the file that the user uploaded.
+    with open('export_tests.csv', 'wb+') as file:
+        file.write(csv_file.read())
+
+    with open('export_tests.csv', 'r+') as file:
+        reader = pandas.read_csv(file) # Read CSV file with the Pandas library.
+
+        for test_name, test_directions, test_repeat_due, test_order in zip(reader['test_name'], reader['test_directions'], reader['test_repeat_due'], reader['test_order']):
+            test = Test.objects.create(
+                test_name = test_name,
+                test_directions = test_directions,
+                test_repeat_due = test_repeat_due, 
+                test_order = test_order,
+                    )
+            test.save()
+
+    return redirect('home')
+
+def export_all_tests(request):
+    queryset = Test.objects.all()
+
+    opts = queryset.model._meta
+    write_to_file(str(opts))
+    model = queryset.model
+    response = HttpResponse(content_type='text/csv')
+    # force download.
+    response['Content-Disposition'] = 'attachment;filename=export_tests.csv'
+    # the csv writer
+    writer = csv.writer(response)
+    field_names = [field.name for field in opts.fields]
+    # Write a first row with header information
+    writer.writerow(field_names)
+    # Write data rows
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in field_names])
+
+    return response
+
+def import_all_questions(request):
+    csv_file = request.FILES['csv_file'] # The uploaded file.
+
+    # Create a new 'export.csv' file based on the data in the file that the user uploaded.
+    with open('export_questions.csv', 'wb+') as file:
+        file.write(csv_file.read())
+
+    with open('export_questions.csv', 'r+') as file:
+        reader = pandas.read_csv(file) # Read CSV file with the Pandas library.
+
+        for test_name, question, answer, review_question in zip(reader['test'], reader['question'], reader['answer'], reader['review_question']):
+            test = Test.objects.filter(test_name=test_name).first()
+            question = Question.objects.create(
+                test=test,
+                question=question,
+                answer=answer,
+                review_question=review_question,
+            )
+            question.save()
+    
+    return redirect('home')
+
+def export_all_questions(request):
+    queryset = Question.objects.all()
+
+    opts = queryset.model._meta
+    write_to_file(str(opts))
+    model = queryset.model
+    response = HttpResponse(content_type='text/csv')
+    # force download.
+    response['Content-Disposition'] = 'attachment;filename=export_questions.csv'
+    # the csv writer
+    writer = csv.writer(response)
+    field_names = [field.name for field in opts.fields]
+    # Write a first row with header information
+    writer.writerow(field_names)
+    # Write data rows
+    for obj in queryset:
+        writer.writerow([getattr(obj, field) for field in field_names])
+
+    return response
 
 
 

@@ -53,6 +53,10 @@ class EmailStudentForm(forms.ModelForm):
         model = EmailPreset
         fields = ['recipient', 'subject', 'body']
 
+class ImportDataForm(forms.Form):
+    csv_file = forms.FileField(required=True)
 
+    class Meta:
+        fields = ['csv_file']
 
 
