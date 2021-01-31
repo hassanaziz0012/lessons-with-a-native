@@ -261,7 +261,7 @@ def delete_question(request, test_id, question_id):
 
 def take_test(request, test_id, profile_id):
     test = Test.objects.filter(pk=test_id).first()
-    questions = Question.objects.filter(test=test)
+    questions = Question.objects.filter(test=test).order_by('id')
 
     for question in Question.objects.all():
         if question.review_question == True:
