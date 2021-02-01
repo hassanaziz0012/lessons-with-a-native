@@ -172,7 +172,7 @@ def create_test(request):
 
 def test(request, test_id):
     test = Test.objects.filter(pk=test_id).first()
-    questions = Question.objects.filter(test=test)
+    questions = Question.objects.filter(test=test).order_by('id')
 
     if request.method == 'POST':
         form = AddQuestionForm(request.POST)
