@@ -1,5 +1,5 @@
 from django import forms
-from .models import EmailPreset, Question, StudentProfile, Test
+from .models import EmailPreset, Question, StudentProfile, Test, Category
 
 
 class StudentProfileForm(forms.ModelForm):
@@ -59,4 +59,14 @@ class ImportDataForm(forms.Form):
     class Meta:
         fields = ['csv_file']
 
+class CreateCategoryForm(forms.ModelForm):
 
+    class Meta:
+        model = Category
+        fields = ['category_name']
+
+class UpdateCategoryForm(forms.ModelForm):
+
+    class Meta:
+        model = Category
+        fields = ['category_name']

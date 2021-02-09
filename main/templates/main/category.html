@@ -1,0 +1,36 @@
+{% extends 'main/base.html' %}
+{% load tags %}
+
+{% block content %}
+<h1>{{category.category_name}}</h1>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-primary">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Test</th>
+            <th scope="col">Questions</th>
+            <th scope="col">Options</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for test in tests %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>{{test.test_name}}</td>
+
+                <td>{%filter_questions_per_test questions test.id%}</td>
+
+                <td>
+                    <a href="{% url 'remove-from-category' test.id category.id %}" class="btn btn-outline-danger">
+                        Remove From Category
+                    </a>
+                </td>
+
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock content %}
