@@ -27,7 +27,7 @@ class Test(models.Model):
 
     supporting_material = models.CharField(max_length=500, null=True)
 
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, related_name='category', blank=True)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE)
 
     def __str__(self) -> str:
         return f"{self.test_name}"
