@@ -287,12 +287,14 @@ def profile(request, profile_username):
 
     tests = Test.objects.all()
     questions = Question.objects.all()
+    categories = Category.objects.all()
 
     context = {
         'title': profile.username + ' - Profile',
         'profile': profile,
         'tests': tests,
         'questions': questions,
+        'categories': categories,
     }
     return render(request, 'main/profile.html', context=context)
 
@@ -603,4 +605,20 @@ def remove_from_category(request, test_id, category_id):
 
     messages.success(request, f'{test.test_name} was removed from the category {category.category_name}.', extra_tags='alert alert-success')
     return redirect('category', category.id)
+
+def take_category_test(request, category_id, profile_id):
+    category = Category.objects.filter(pk=category_id).first()
+    profile = StudentProfile.objects.filter(pk=profile_id).first()
+    tests = Test.objects.filter(category=category)
+    questions = Question.objects.all()
+
+    context = {
+        'title': str(category.category_name) + ' - Take Test',
+        'category': category,
+        'tests': tests,
+        'profile': profile,
+        'questions': questions,
+    }
+    return render(request, 'main/take_category_test.html', context=context)
+
 

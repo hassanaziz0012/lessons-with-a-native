@@ -48,5 +48,7 @@ urlpatterns = [
     path('test/<int:test_id>/add-to-category/<int:category_id>', views.add_to_category, name='add-to-category'),
     path('test/<int:test_id>/remove-from-category/<int:category_id>', views.remove_from_category, name='remove-from-category'),
 
+    path('category/<int:category_id>/profile/<int:profile_id>/take-test', views.take_category_test, name='take-category-test'),
+
 
 ]

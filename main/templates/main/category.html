@@ -18,7 +18,11 @@
         {% for test in tests %}
             <tr>
                 <th scope="row">{{forloop.counter}}</th>
-                <td>{{test.test_name}}</td>
+                <td>
+                    <a href="{% url 'test' test.id %}">
+                        {{test.test_name}}
+                    </a>
+                </td>
 
                 <td>{%filter_questions_per_test questions test.id%}</td>
 
