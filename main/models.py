@@ -2,16 +2,15 @@ from django.db import models
 
 
 # # Create your models here.
-# class Category(models.Model):
-#     category_name = models.CharField(max_length=100)
+class Category(models.Model):
+    category_name = models.CharField(max_length=100)
 
-#     def __str__(self) -> str:
-#         return f"{self.category_name}"
+    def __str__(self) -> str:
+        return f"{self.category_name}"
 
-#     def __repr__(self) -> str:
-#         return f"<{self.category_name}>"
+    def __repr__(self) -> str:
+        return f"<{self.category_name}>"
 
-# Create your models here.
 class Test(models.Model):
     test_name = models.CharField(max_length=100)
     test_directions = models.TextField(null=True)
@@ -28,7 +27,7 @@ class Test(models.Model):
 
     supporting_material = models.CharField(max_length=500, null=True)
 
-    # category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, related_name='category', blank=True)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, related_name='category', blank=True)
 
     def __str__(self) -> str:
         return f"{self.test_name}"
