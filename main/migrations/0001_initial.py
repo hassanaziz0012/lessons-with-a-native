@@ -46,11 +46,11 @@ class Migration(migrations.Migration):
                 ('test_repeat_due', models.IntegerField(default=6)),
                 ('test_order', models.IntegerField(default=0)),
                 ('supporting_material', models.CharField(max_length=500, null=True)),
-                ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, related_name='category', to='main.category')),
                 ('test_status_due', models.ManyToManyField(related_name='test_status_due', to='main.StudentProfile')),
                 ('test_status_good', models.ManyToManyField(related_name='test_status_good', to='main.StudentProfile')),
                 ('test_status_new', models.ManyToManyField(related_name='test_status_new', to='main.StudentProfile')),
                 ('test_status_repeat', models.ManyToManyField(related_name='test_status_repeat', to='main.StudentProfile')),
+                ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='category', to='main.category')),
             ],
         ),
         migrations.CreateModel(
