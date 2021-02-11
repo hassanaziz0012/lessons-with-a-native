@@ -22,8 +22,8 @@ urlpatterns = [
     path('tests/<int:test_id>/question/<int:question_id>/update', views.update_question, name='update-question'),
     path('tests/<int:test_id>/question/<int:question_id>/delete', views.delete_question, name='delete-question'),
 
-    path('tests/take/<int:test_id>/profile/<int:profile_id>/results/good', views.test_score_good, name='test-score-good'),
-    path('tests/take/<int:test_id>/profile/<int:profile_id>/results/needs-work', views.test_score_needs_work, name='test-score-needs-work'),
+    path('tests/take/<int:test_id>/profile/<int:profile_id>/category/<int:category_id>/results/good', views.test_score_good, name='test-score-good'),
+    path('tests/take/<int:test_id>/profile/<int:profile_id>/category/<int:category_id>/results/needs-work', views.test_score_needs_work, name='test-score-needs-work'),
 
     path('tests/<int:test_id>/move/up', views.test_move_up, name='test-move-up'),
     path('tests/<int:test_id>/move/down', views.test_move_down, name='test-move-down'),

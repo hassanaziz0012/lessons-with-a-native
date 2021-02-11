@@ -36,13 +36,13 @@
 
     <div>
         <h3>How did the student perform?</h3>
-        <a href="{% url 'test-score-needs-work' test.id profile.id %}">
+        <a href="{% url 'test-score-needs-work' test.id profile.id category.id %}">
             <button class="btn btn-secondary">
                 Needs work
             </button>
         </a>
         
-        <a href="{% url 'test-score-good' test.id profile.id %}">
+        <a href="{% url 'test-score-good' test.id profile.id category.id %}">
             <button class="btn btn-success">
                 Easy
             </button>

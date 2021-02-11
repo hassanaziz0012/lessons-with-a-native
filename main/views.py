@@ -140,6 +140,14 @@ def tests(request):
                 test_directions = c_form.cleaned_data['test_directions'],
                 test_order = len(Test.objects.all()),
                 )
+
+            # All tests go into a "Default" category. If that doesn't exist, create it.
+            if Category.objects.filter(category_name='Default').first() == None:
+                c = Category.objects.create(category_name='Default')
+                c.save()
+            
+            test.category = Category.objects.filter(category_name='Default').first()
+
             test.save()
 
             for profile in profiles:
@@ -299,9 +307,10 @@ def profile(request, profile_username):
     return render(request, 'main/profile.html', context=context)
 
 
-def test_score_good(request, test_id, profile_id):
+def test_score_good(request, test_id, profile_id, category_id):
     test = Test.objects.filter(pk=test_id).first()
     profile = StudentProfile.objects.filter(pk=profile_id).first()
+    category = Category.objects.filter(pk=category_id).first()
 
     test.test_status_good.add(profile) # Set the test to status(Good) for this profile.
 
@@ -330,18 +339,21 @@ def test_score_good(request, test_id, profile_id):
 
             test_obj.save()
 
-    context = {
-        'title': f'{test.test_name} - Graded Good', 
-        'profile': profile, 
-        'tests': Test.objects.all(),
-        'prev_test': prev_test,
-        'next_test': next_test,
-        }
-    return render(request, 'main/test_score_good.html', context=context)
+    return redirect('take-category-test', category.id, profile.id)
 
-def test_score_needs_work(request, test_id, profile_id):
+    # context = {
+    #     'title': f'{test.test_name} - Graded Good', 
+    #     'profile': profile, 
+    #     'tests': Test.objects.all(),
+    #     'prev_test': prev_test,
+    #     'next_test': next_test,
+    #     }
+    # return render(request, 'main/test_score_good.html', context=context)
+
+def test_score_needs_work(request, test_id, profile_id, category_id):
     test = Test.objects.filter(pk=test_id).first()
     profile = StudentProfile.objects.filter(pk=profile_id).first()
+    category = Category.objects.filter(pk=category_id).first()
 
     test.test_status_repeat.add(profile) # Set the test to status(Good) for this profile.
     test.test_repeat_due = 6
@@ -370,14 +382,16 @@ def test_score_needs_work(request, test_id, profile_id):
     prev_test = Test.objects.filter(test_order=test.test_order-1).first()
     next_test = Test.objects.filter(test_order=test.test_order+1).first()
 
-    context = {
-        'title': f'{test.test_name} - Graded Needs Work', 
-        'profile': profile, 
-        'tests': Test.objects.all(),
-        'prev_test': prev_test,
-        'next_test': next_test,
-        }
-    return render(request, 'main/test_score_needs_work.html', context=context)
+    return redirect('take-category-test', category.id, profile.id)
+
+    # context = {
+    #     'title': f'{test.test_name} - Graded Needs Work', 
+    #     'profile': profile, 
+    #     'tests': Test.objects.all(),
+    #     'prev_test': prev_test,
+    #     'next_test': next_test,
+    #     }
+    # return render(request, 'main/test_score_needs_work.html', context=context)
 
 
 def test_move_up(request, test_id):
@@ -611,6 +625,9 @@ def take_category_test(request, category_id, profile_id):
     profile = StudentProfile.objects.filter(pk=profile_id).first()
     tests = Test.objects.filter(category=category)
     questions = Question.objects.all()
+
+    # category.taking_category_test_bool = True
+    # category.save()
 
     context = {
         'title': str(category.category_name) + ' - Take Test',

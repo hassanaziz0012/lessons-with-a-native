@@ -6,12 +6,57 @@
 <p>{{profile.email}}</p>
 <hr>
 
+
+
+<h1>Categories</h1>
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Category</th>
+            <th scope="col">Tests</th>
+            <!-- <th scope="col">Status</th> -->
+            <th scope="col">Options</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+            <tr>
+                <th scope="row">{{forloop.counter}}</th>
+                <td>
+                    <a href="{% url 'category' category.id %}">
+                        {{category.category_name}}
+                    </a>
+                </td>
+                <td>
+                    {% for test in tests %}
+                        {% if test.category == category %}
+                            {{test.test_name}} -
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <!-- <td>
+                    <span class="badge badge-primary">Status needs to be fixed.</span>
+                </td> -->
+                <td>
+                    <a href="{% url 'take-category-test' category.id profile.id %}">
+                        <button class="btn btn-primary">Test This Category</button>
+                    </a>
+                </td>
+            </tr>
+        {%endfor%}
+    </tbody>
+</table>
+
+<br><hr><br>
+
 <h1>Tests</h1>
 <table class="table table-bordered table-striped">
     <thead class="thead-dark">
         <tr>
             <th scope="col">#</th>
             <th scope="col">Test</th>
+            <th scope="col">Category</th>
             <th scope="col">Questions</th>
             <th scope="col">Status</th>
             <th scope="col">Options</th>
@@ -26,6 +71,7 @@
                         {{test.test_name}}
                     </a>
                 </td>
+                <td>{{test.category}}</td>
                 <td>{%filter_questions_per_test questions test.id%}</td>
                 <td>
                     {% if profile in test.test_status_new.all %}
@@ -50,47 +96,4 @@
         {%endfor%}
     </tbody>
 </table>
-
-<br><hr><br>
-
-<h1>Categories</h1>
-<table class="table table-bordered table-striped">
-    <thead class="thead-dark">
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Category</th>
-            <th scope="col">Tests</th>
-            <th scope="col">Status</th>
-            <th scope="col">Options</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for category in categories %}
-            <tr>
-                <th scope="row">{{forloop.counter}}</th>
-                <td>
-                    <a href="{% url 'category' category.id %}">
-                        {{category.category_name}}
-                    </a>
-                </td>
-                <td>
-                    {% for test in tests %}
-                        {% if test.category == category %}
-                            {{test.test_name}} -
-                        {% endif %}
-                    {% endfor %}
-                </td>
-                <td>
-                    <!-- <span class="badge badge-primary">Status needs to be fixed.</span> -->
-                </td>
-                <td>
-                    <a href="{% url 'take-category-test' category.id profile.id %}">
-                        <button class="btn btn-primary">Test This Category</button>
-                    </a>
-                </td>
-            </tr>
-        {%endfor%}
-    </tbody>
-</table>
-
 {% endblock content %}
