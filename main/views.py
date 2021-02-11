@@ -567,6 +567,7 @@ def categories(request):
         'title': 'Categories',
         'form': form,
         'u_form': u_form,
+        'tests': Test.objects.all(),
         'categories': Category.objects.all(),
     }
     return render(request, 'main/categories.html', context=context)
