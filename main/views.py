@@ -631,6 +631,7 @@ def take_category_test(request, category_id, profile_id):
     # category.taking_category_test_bool = True
     # category.save()
 
+    review_questions_bool = False
     for question in Question.objects.all():
         if question.review_question == True:
             review_questions_bool = True
