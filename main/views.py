@@ -284,6 +284,7 @@ def take_test(request, test_id, profile_id):
     context = {
         'title': str(test.test_name) + ' - Test',
         'test': test,
+        'category': test.category,
         'questions': questions,
         'profile': profile,
         'review_questions_bool': review_questions_bool,
@@ -451,19 +452,19 @@ def send_student_email(request, test_id, preset_id):
 
     return redirect('test', test_id)
 
-def add_to_review(request, test_id, question_id, profile_id):
+def add_to_review(request, profile_id, question_id,  category_id):
     question = Question.objects.filter(pk=question_id).first()
     question.review_question = True
     question.save()
 
-    return redirect('take-test', test_id, profile_id)
+    return redirect('take-category-test', category_id, profile_id)
 
-def remove_from_review(request, test_id, question_id, profile_id):
+def remove_from_review(request, question_id, profile_id, category_id):
     question = Question.objects.filter(pk=question_id).first()
     question.review_question = False
     question.save()
 
-    return redirect('take-test', test_id, profile_id)
+    return redirect('take-category-test', category_id, profile_id)
 
 def import_all_tests(request):
     csv_file = request.FILES['csv_file'] # The uploaded file.
@@ -629,12 +630,20 @@ def take_category_test(request, category_id, profile_id):
     # category.taking_category_test_bool = True
     # category.save()
 
+    for question in Question.objects.all():
+        if question.review_question == True:
+            review_questions_bool = True
+            break
+        else:
+            review_questions_bool = False
+
     context = {
         'title': str(category.category_name) + ' - Take Test',
         'category': category,
         'tests': tests,
         'profile': profile,
         'questions': questions,
+        'review_questions_bool': review_questions_bool,
     }
     return render(request, 'main/take_category_test.html', context=context)
 

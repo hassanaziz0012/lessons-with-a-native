@@ -59,7 +59,7 @@
             <th scope="col">Category</th>
             <th scope="col">Questions</th>
             <th scope="col">Status</th>
-            <th scope="col">Options</th>
+            <!-- <th scope="col">Options</th> -->
         </tr>
     </thead>
     <tbody>
@@ -87,11 +87,12 @@
                         <span class="badge badge-secondary">Status Unknown</span>
                     {% endif %}
                 </td>
-                <td>
-                    <a href="{% url 'take-test' test_id=test.id profile_id=profile.id %}">
+                <!-- <td>
+                    <a href="{% url 'take-test' test.id profile.id %}">
+                        Take this test individually, without a category.
                         <button class="btn btn-primary">Take Test</button>
                     </a>
-                </td>
+                </td> -->
             </tr>
         {%endfor%}
     </tbody>
