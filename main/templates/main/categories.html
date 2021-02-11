@@ -66,7 +66,11 @@
                     </a>
                 </td>
                 <td>
-                    Tests in this category. Truncate it to not show too much.
+                    {% for test in tests %}
+                        {% if test.category == category %}
+                            {{test.name}} - 
+                        {% endif %}
+                    {% endfor %}
                 </td>
                 <td>
 
