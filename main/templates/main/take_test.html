@@ -24,7 +24,7 @@
                 <td>{{question.question}}</td>
                 <td>{{question.answer}}</td>
                 <td>
-                    <a href="{% url 'add-to-review' test_id=test.id profile_id=profile.id question_id=question.id %}">
+                    <a href="{% url 'add-to-review' profile.id question.id category.id taking_individual_test %}">
                         <button class="btn btn-success">Add to Review</button>
                     </a>
                 </td>
@@ -56,7 +56,7 @@
                                     <td>{{question.question}}</td>
                                     <td>{{question.answer}}</td>
                                     <td>
-                                        <a href="{% url 'remove-from-review' test_id=test.id profile_id=profile.id question_id=question.id %}">
+                                        <a href="{% url 'remove-from-review' profile.id question.id category.id taking_individual_test %}">
                                             <button class="btn btn-danger">Remove from Review</button>
                                         </a>
                                     </td>

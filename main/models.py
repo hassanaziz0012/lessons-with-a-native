@@ -36,8 +36,6 @@ class Test(models.Model):
     def __repr__(self) -> str:
         return f"<{self.test_name}>"
 
-
-
 class StudentProfile(models.Model):
     username = models.CharField(max_length=100, blank=False)
     email = models.EmailField()
@@ -49,7 +47,6 @@ class StudentProfile(models.Model):
     
     def __repr__(self) -> str:
         return f'<StudentProfile: {self.username} - {self.email}>'
-
 
 class Question(models.Model):
     test = models.ForeignKey(Test, on_delete=models.CASCADE)

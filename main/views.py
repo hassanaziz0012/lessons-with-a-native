@@ -288,6 +288,8 @@ def take_test(request, test_id, profile_id):
         'questions': questions,
         'profile': profile,
         'review_questions_bool': review_questions_bool,
+
+        'taking_individual_test': True,
     }
     return render(request, 'main/take_test.html', context=context)
 
@@ -452,19 +454,31 @@ def send_student_email(request, test_id, preset_id):
 
     return redirect('test', test_id)
 
-def add_to_review(request, profile_id, question_id,  category_id):
+def add_to_review(request, profile_id, question_id,  category_id, taking_individual_test):
     question = Question.objects.filter(pk=question_id).first()
     question.review_question = True
     question.save()
 
-    return redirect('take-category-test', category_id, profile_id)
+    test = question.test
+    test_id = test.id
+    
+    if taking_individual_test == True:
+        return redirect('take-test', test_id, profile_id)
+    else:
+        return redirect('take-category-test', category_id, profile_id)
 
-def remove_from_review(request, question_id, profile_id, category_id):
+def remove_from_review(request, question_id, profile_id, category_id, taking_individual_test):
     question = Question.objects.filter(pk=question_id).first()
     question.review_question = False
     question.save()
+    
+    test = question.test
+    test_id = test.id
 
-    return redirect('take-category-test', category_id, profile_id)
+    if taking_individual_test == True:
+        return redirect('take-test', test_id, profile_id)
+    else:
+        return redirect('take-category-test', category_id, profile_id)
 
 def import_all_tests(request):
     csv_file = request.FILES['csv_file'] # The uploaded file.
@@ -627,7 +641,7 @@ def take_category_test(request, category_id, profile_id):
     profile = StudentProfile.objects.filter(pk=profile_id).first()
     tests = Test.objects.filter(category=category)
     questions = Question.objects.all()
-
+    
     # category.taking_category_test_bool = True
     # category.save()
 
@@ -646,6 +660,8 @@ def take_category_test(request, category_id, profile_id):
         'profile': profile,
         'questions': questions,
         'review_questions_bool': review_questions_bool,
+
+        'taking_individual_test': False,
     }
     return render(request, 'main/take_category_test.html', context=context)
 
