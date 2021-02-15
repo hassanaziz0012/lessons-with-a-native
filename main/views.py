@@ -490,12 +490,21 @@ def import_all_tests(request):
     with open('export_tests.csv', 'r+') as file:
         reader = pandas.read_csv(file) # Read CSV file with the Pandas library.
 
-        for test_name, test_directions, test_repeat_due, test_order in zip(reader['test_name'], reader['test_directions'], reader['test_repeat_due'], reader['test_order']):
+        for test_name, test_directions, test_repeat_due, test_order, test_category in zip(
+            reader['test_name'], 
+            reader['test_directions'], 
+            reader['test_repeat_due'], 
+            reader['test_order'], 
+            reader['category']):
+
+            category = Category.objects.filter(category_name=str(test_category)).first()
+            
             test = Test.objects.create(
                 test_name = test_name,
                 test_directions = test_directions,
                 test_repeat_due = test_repeat_due, 
                 test_order = test_order,
+                category = category,
                     )
             test.save()
 
