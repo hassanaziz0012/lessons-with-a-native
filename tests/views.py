@@ -61,7 +61,7 @@ def tests(request):
         'questions': questions,
         'form': c_form,
         'u_form': u_form,
-        'last_test': len(Test.objects.all()) - 1,
+        'last_test': len(Test.objects.all()),
     }
     return render(request, 'main/tests.html', context=context)
 
