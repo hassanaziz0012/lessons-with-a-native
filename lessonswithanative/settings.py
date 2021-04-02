@@ -34,6 +34,10 @@ ALLOWED_HOSTS = ['josiahtrotter.herokuapp.com', 'lessons-with-a-native.herokuapp
 INSTALLED_APPS = [
     'django.contrib.admin',
     'main.apps.MainConfig',
+    'users.apps.UsersConfig',
+    'tests.apps.TestsConfig',
+    'category.apps.CategoryConfig',
+    'question.apps.QuestionConfig',
     'crispy_forms',
     'django.contrib.auth',
     'django.contrib.contenttypes',

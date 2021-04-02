@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import Category, EmailPreset, Question, StudentProfile, Test
+from question.models import Question
+from tests.models import Test
+from category.models import Category
+from users.models import StudentProfile, EmailPreset
+
 
 # Register your models here.
 admin.site.register(StudentProfile)

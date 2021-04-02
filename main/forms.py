@@ -1,57 +1,5 @@
 from django import forms
-from .models import EmailPreset, Question, StudentProfile, Test, Category
 
-
-class StudentProfileForm(forms.ModelForm):
-
-    class Meta:
-        model = StudentProfile
-        fields = ['username', 'email']
-
-class UpdateStudentProfileForm(forms.ModelForm):
-
-    username = forms.CharField(max_length=120, required=False)
-    email = forms.EmailField(required=False)
-
-    class Meta:
-        model = StudentProfile
-        fields = ['username', 'email']
-
-class CreateTestForm(forms.ModelForm):
-
-    class Meta:
-        model = Test
-        fields = ['test_name', 'test_directions']
-
-class AddQuestionForm(forms.ModelForm):
-
-    class Meta:
-        model = Question
-        fields = ['question', 'answer']
-
-class UpdateTestForm(forms.ModelForm):
-
-    test_name = forms.CharField(max_length=100, required=False)
-
-    class Meta:
-        model = Test
-        fields = ['test_name', 'test_directions']
-
-class UpdateQuestionForm(forms.ModelForm):
-
-    question = forms.CharField(max_length=200, required=False)
-    answer = forms.CharField(max_length=200, required=False)
-
-    class Meta:
-        model = Question
-        fields = ['question', 'answer']
-
-class EmailStudentForm(forms.ModelForm):
-    recipient = forms.EmailField(label='Recipient\'s Email Address')
-
-    class Meta:
-        model = EmailPreset
-        fields = ['recipient', 'subject', 'body']
 
 class ImportDataForm(forms.Form):
     csv_file = forms.FileField(required=True)
@@ -59,14 +7,3 @@ class ImportDataForm(forms.Form):
     class Meta:
         fields = ['csv_file']
 
-class CreateCategoryForm(forms.ModelForm):
-
-    class Meta:
-        model = Category
-        fields = ['category_name']
-
-class UpdateCategoryForm(forms.ModelForm):
-
-    class Meta:
-        model = Category
-        fields = ['category_name']

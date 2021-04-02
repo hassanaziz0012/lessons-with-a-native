@@ -2,75 +2,8 @@ from django.db import models
 
 
 # # Create your models here.
-class Category(models.Model):
-    category_name = models.CharField(max_length=100)
-    taking_category_test_bool = models.BooleanField(default=False)
 
-    def __str__(self) -> str:
-        return f"{self.category_name}"
 
-    def __repr__(self) -> str:
-        return f"<{self.category_name}>"
 
-class Test(models.Model):
-    test_name = models.CharField(max_length=100)
-    test_directions = models.TextField(null=True)
-
-    test_status_new = models.ManyToManyField('StudentProfile', related_name='test_status_new')
-    test_status_good = models.ManyToManyField('StudentProfile', related_name='test_status_good')
-
-    test_status_repeat = models.ManyToManyField('StudentProfile', related_name='test_status_repeat')
-    test_repeat_due = models.IntegerField(default=6)
-
-    test_status_due = models.ManyToManyField('StudentProfile', related_name='test_status_due')
-
-    test_order = models.IntegerField(default=0)
-
-    supporting_material = models.CharField(max_length=500, null=True)
-
-    category = models.ForeignKey('Category', on_delete=models.CASCADE)
-
-    def __str__(self) -> str:
-        return f"{self.test_name}"
-
-    def __repr__(self) -> str:
-        return f"<{self.test_name}>"
-
-class StudentProfile(models.Model):
-    username = models.CharField(max_length=100, blank=False)
-    email = models.EmailField()
-    
-    avg_score = models.IntegerField(default=0)
-
-    def __str__(self) -> str:
-        return f'{self.username} - Student Profile'
-    
-    def __repr__(self) -> str:
-        return f'<StudentProfile: {self.username} - {self.email}>'
-
-class Question(models.Model):
-    test = models.ForeignKey(Test, on_delete=models.CASCADE)
-    
-    question = models.CharField(max_length=200)
-    answer = models.CharField(max_length=200)
-
-    review_question = models.BooleanField(default=False)
-
-    def __str__(self) -> str:
-        return f'{self.question} - Test: {self.test}'
-
-    def __repr__(self) -> str:
-        return f'<{self.question} - {self.test}>'
-
-class EmailPreset(models.Model):
-    recipient = models.EmailField()
-    subject = models.CharField(max_length=120)
-    body = models.TextField()
-
-    def __str__(self) -> str:
-        return f'{self.recipient} - Subject: {self.subject}'
-    
-    def __repr__(self) -> str:
-        return f'<{self.recipient}><Subject: {self.subject}>'
 
 
