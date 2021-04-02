@@ -143,7 +143,7 @@
                     </div>
                 </td>
                 <td>
-                    {% if test.test_order != 0 %}
+                    {% if test.test_order != 1 %}
                         <a href="{% url 'test-move-up' test.id %}">
                             <button title="Move Up" class="btn btn-success move up"><i class="fas fa-sort-amount-up-alt"></i></button>
                         </a>
