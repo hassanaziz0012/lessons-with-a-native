@@ -19,3 +19,8 @@ This project was actually made for my very first client, so I worked really hard
 This is what the homepage looks like: ![Home](https://i.imgur.com/4w5Q3yd.png)
 It is very basic. This is also where you backup your data. So, you can export and import your data from here.
 
+## Student Profiles
+This is what Student Profiles look like: ![Student Profiles](https://i.imgur.com/PS3FsbF.png)
+You should create a new Profile for each user. All you need is their name and their E-mail. This email is used to send them emails which you do from inside the app.
+
+You can track the progress of each student on each test or on each category of tests. This is what a Profile looks like: ![Hassan's Profile](https://i.imgur.com/BlexFLg.png)
