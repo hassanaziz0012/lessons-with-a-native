@@ -1,1 +1,8 @@
+**/__pycache__/*
+export_questions.csv
+export_tests.csv
+sample_log.txt
+csv_test.py
 db.sqlite3
+staticfiles/*
+.DS_Store
