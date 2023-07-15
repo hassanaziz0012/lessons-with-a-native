@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'category.apps.CategoryConfig',
     'question.apps.QuestionConfig',
     'crispy_forms',
+    'crispy_bootstrap4',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -87,6 +88,7 @@ DATABASES = {
     }
 }
 
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
