@@ -31,7 +31,7 @@
                         {% for category in categories %}
                             <li class="list-group-item">
                                 <a href="{% url 'add-to-category' test.id category.id %}">
-                                    <button class="btn btn-info">{{category.category_name}}</button>
+                                    <button class="btn btn-primary">{{category.category_name}}</button>
                                 </a>
                             </li>
                         {% endfor %}
@@ -49,7 +49,7 @@
 </div>
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-info mb-3" data-toggle="modal" data-target="#emailStudentModal">
+<button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#emailStudentModal">
     Email Student
 </button>
   
@@ -92,7 +92,6 @@
     </div>
 </div>
 
-<br>
 <button type="button" class="btn btn-warning text-dark mb-3" data-toggle="modal" data-target="#createEmailPresetModal">
     Create Email Preset
 </button>

@@ -157,6 +157,8 @@ def take_test(request, test_id, profile_id):
 
 
 def test_score_good(request, test_id, profile_id, category_id):
+    step = request.GET.get('step')
+
     test = Test.objects.filter(pk=test_id).first()
     profile = StudentProfile.objects.filter(pk=profile_id).first()
     category = Category.objects.filter(pk=category_id).first()
@@ -188,18 +190,13 @@ def test_score_good(request, test_id, profile_id, category_id):
 
             test_obj.save()
 
-    return redirect('take-category-test', category.id, profile.id)
-
-    # context = {
-    #     'title': f'{test.test_name} - Graded Good', 
-    #     'profile': profile, 
-    #     'tests': Test.objects.all(),
-    #     'prev_test': prev_test,
-    #     'next_test': next_test,
-    #     }
-    # return render(request, 'main/test_score_good.html', context=context)
+    if step == "category":
+        return redirect('take-category-test', category.id, profile.id)
+    elif step == "test":
+        return redirect('profile', profile.username)
 
 def test_score_needs_work(request, test_id, profile_id, category_id):
+    step = request.GET.get('step')
     test = Test.objects.filter(pk=test_id).first()
     profile = StudentProfile.objects.filter(pk=profile_id).first()
     category = Category.objects.filter(pk=category_id).first()
@@ -231,17 +228,10 @@ def test_score_needs_work(request, test_id, profile_id, category_id):
     prev_test = Test.objects.filter(test_order=test.test_order-1).first()
     next_test = Test.objects.filter(test_order=test.test_order+1).first()
 
-    return redirect('take-category-test', category.id, profile.id)
-
-    # context = {
-    #     'title': f'{test.test_name} - Graded Needs Work', 
-    #     'profile': profile, 
-    #     'tests': Test.objects.all(),
-    #     'prev_test': prev_test,
-    #     'next_test': next_test,
-    #     }
-    # return render(request, 'main/test_score_needs_work.html', context=context)
-
+    if step == "category":
+        return redirect('take-category-test', category.id, profile.id)
+    elif step == "test":
+        return redirect('profile', profile.username)
 
 def test_move_up(request, test_id):
     test = Test.objects.filter(pk=test_id).first()

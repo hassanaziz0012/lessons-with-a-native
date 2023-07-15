@@ -24,7 +24,7 @@
             <tr>
                 <th scope="row">{{forloop.counter}}</th>
                 <td>
-                    <a href="{% url 'category' category.id %}">
+                    <a href="{% url 'get-category' %}?category_id={{category.pk}}">
                         {{category.category_name}}
                     </a>
                 </td>

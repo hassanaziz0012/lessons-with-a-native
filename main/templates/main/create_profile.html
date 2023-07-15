@@ -6,8 +6,8 @@
 
 <form action="" method="post">
     <fieldset class="form-group">
-        {%csrf_token%}
-        {{form|crispy}}
+        {% csrf_token %}
+        {{ form|crispy }}
     </fieldset>
 
     <div class="form-group">

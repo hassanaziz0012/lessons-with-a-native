@@ -5,29 +5,44 @@
 <h1>Home</h1>
 <hr>
 
-<h2>Backups</h2>
-<div class="export-tests">
-    <a href="{% url 'export-all-tests' %}">
-        <button class="btn btn-primary">Export all tests</button>
-    </a>
 
-    <!-- Button trigger modal -->
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ImportTestsModal">
-        Import all tests
-    </button>
+<div class="stats-section">
+    
 </div>
 
-<br>
+<div class="row backups-section">
+    <div class="col-lg-6 card card-body">
+        <h2 class="section-heading">Backups</h2>
+        <div class="row">
+            <div class="col-lg-6 pl-0">
+                <a href="{% url 'export-all-tests' %}">
+                    <button class="btn btn-primary w-100">Export all tests</button>
+                </a>
+            </div>
+            <div class="col-lg-6 pl-0">
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-success w-100" data-toggle="modal" data-target="#ImportTestsModal">
+                    Import all tests
+                </button>
+            </div>
+        </div>
 
-<div class="export-questions">
-    <a href="{% url 'export-all-questions' %}">
-        <button class="btn btn-primary">Export all questions</button>
-    </a>
-
-    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#ImportQuestionsModal">
-        Import all questions
-    </button>
+        <div class="row mt-3">
+            <div class="col-lg-6 pl-0">
+                <a href="{% url 'export-all-questions' %}">
+                    <button class="btn btn-primary w-100">Export all questions</button>
+                </a>
+            </div>
+            <div class="col-lg-6 pl-0">
+                <button type="button" class="btn btn-success w-100" data-toggle="modal" data-target="#ImportQuestionsModal">
+                    Import all questions
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6"></div>
 </div>
+
 
 <!-- Import Tests Modal -->
 <div class="modal fade" id="ImportTestsModal" tabindex="-1" role="dialog" aria-labelledby="ImportTestsModalLabel" aria-hidden="true">

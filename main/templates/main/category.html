@@ -27,8 +27,10 @@
                 <td>{%filter_questions_per_test questions test.id%}</td>
 
                 <td>
-                    <a href="{% url 'remove-from-category' test.id category.id %}" class="btn btn-outline-danger">
-                        Remove From Category
+                    <a href="{% url 'remove-from-category' test.id category.id %}">
+                        <button class="btn btn-danger">
+                            Remove From Category
+                        </button>
                     </a>
                 </td>
 

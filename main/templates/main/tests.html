@@ -25,8 +25,8 @@
 
         <div class="modal-body">
             <p class="text-muted">You will be able to add questions later.</p>
-                {%csrf_token%}
-                {{form|crispy}}
+                {% csrf_token %}
+                {{ form|crispy }}
         </div>
 
         <div class="modal-footer">
@@ -88,8 +88,8 @@
                                     
                                     <form role="form" action="{% url 'update-test' test.id %}" method="post">
                                         <fieldset class="form-group">
-                                            {%csrf_token%}
-                                            {{u_form|crispy}}
+                                            {% csrf_token %}
+                                            {{ u_form|crispy }}
                                         </fieldset>
                                     
                                 </div>

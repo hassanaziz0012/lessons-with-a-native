@@ -34,7 +34,7 @@
 </table>
 
 <div class="mb-4">
-    <button class="btn btn-dark mb-2" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+    <button class="btn btn-secondary mb-2" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
         Review Questions
     </button>
 
@@ -75,13 +75,13 @@
 
 <div>
     <h3>How did the student perform?</h3>
-    <a href="{% url 'test-score-needs-work' test.id profile.id category.id %}">
+    <a href="{% url 'test-score-needs-work' test.id profile.id category.id %}?step=test">
         <button class="btn btn-secondary">
             Needs work
         </button>
     </a>
     
-    <a href="{% url 'test-score-good' test.id profile.id category.id %}">
+    <a href="{% url 'test-score-good' test.id profile.id category.id %}?step=test">
         <button class="btn btn-success">
             Easy
         </button>
