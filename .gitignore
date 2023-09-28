@@ -6,3 +6,4 @@ csv_test.py
 db.sqlite3
 staticfiles/*
 .DS_Store
+lessonswithanative/.env
