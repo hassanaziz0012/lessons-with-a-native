@@ -59,5 +59,8 @@ python manage.py runserver
 
 Explore the site and see what it is capable of on your own. The design is based on the Nord theme, which I'm a huge fan of. But the app's functionality is the most important thing here. Anyway, enjoy and thank you for reading! :)
 
-## About Me
-I'm a freelance developer. Wanna see more of my work? See my website here: https://www.hassandev.me
+## Author
+- Hassan Aziz
+- Web Developer and Designer
+- Website: https://www.hassandev.me
+- Check out my other [web projects](https://www.hassandev.me/projects)
